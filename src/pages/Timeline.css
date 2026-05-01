@@ -1,0 +1,133 @@
+.timeline-header {
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-bottom: 4rem;
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+  color: white;
+}
+
+.live-tracker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  fontWeight: 600;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  margin-bottom: 1.5rem;
+}
+
+.timeline-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  flex: 1 1 200px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timeline-container {
+  max-width: 850px;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 4rem;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 28px;
+  top: 20px;
+  bottom: 20px;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--saffron) 0%, var(--green) 100%);
+  border-radius: 4px;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+.phase-item {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  zIndex: 1;
+}
+
+.phase-icon-container {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--surface-solid);
+  transition: all 0.3s;
+}
+
+.phase-card {
+  padding: 2rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+.phase-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+}
+
+.current-badge {
+  font-size: 0.75rem;
+  color: #EF4444;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.details-container {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-solid);
+}
+
+.fact-title {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fact-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.fact-item {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}

@@ -1,47 +1,57 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { voterGuideSteps } from '../data/election-steps';
 import { CheckCircle2, Circle, Lightbulb, ArrowLeft, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import './Guide.css';
 
 export default function Guide() {
   const [activeStep, setActiveStep] = useState(0);
 
-  const getStepImage = (stepId) => {
+  const getStepImage = useCallback((stepId) => {
     if (stepId <= 3) return "/assets/registration.png";
     if (stepId >= 6 && stepId <= 7) return "/assets/evm.png";
     if (stepId === 8) return "/assets/hero.png";
     return "/assets/voter-card.png";
-  };
+  }, []);
 
-  const currentStep = voterGuideSteps[activeStep];
-  const progress = ((activeStep + 1) / voterGuideSteps.length) * 100;
+  const currentStep = useMemo(() => voterGuideSteps[activeStep], [activeStep]);
+  const progress = useMemo(() => ((activeStep + 1) / voterGuideSteps.length) * 100, [activeStep]);
+
+  const handleStepSelect = useCallback((index) => {
+    setActiveStep(index);
+  }, []);
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      role="main"
+      aria-label="Voter's Step-by-Step Guide"
     >
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <header className="guide-header">
         <h2 style={{ fontSize: '2.5rem', color: 'var(--navy)', marginBottom: '0.5rem' }}>Voter's Step-by-Step Guide</h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>Follow these {voterGuideSteps.length} steps to exercise your right to vote.</p>
+        
         {/* Overall Progress */}
-        <div style={{ maxWidth: '400px', margin: '1.5rem auto 0', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ flex: 1, height: '6px', borderRadius: '3px', background: 'var(--border-solid)', overflow: 'hidden' }}>
+        <div className="progress-container" aria-label={`Overall progress: ${Math.round(progress)}%`}>
+          <div className="progress-bar-bg" aria-hidden="true">
             <motion.div 
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.4 }}
-              style={{ height: '100%', borderRadius: '3px', background: 'linear-gradient(90deg, var(--saffron) 0%, var(--green) 100%)' }}
+              className="progress-bar-fill"
             />
           </div>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--navy)', whiteSpace: 'nowrap' }}>{activeStep + 1}/{voterGuideSteps.length}</span>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--navy)', whiteSpace: 'nowrap' }}>
+            {activeStep + 1}/{voterGuideSteps.length}
+          </span>
         </div>
-      </div>
+      </header>
 
-      <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+      <div className="guide-layout">
         {/* Stepper Navigation */}
-        <div style={{ flex: '1 1 280px' }} className="glass-card">
+        <nav className="glass-card stepper-nav" aria-label="Steps list">
           <div style={{ padding: '1.5rem' }}>
             <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem', color: 'var(--navy)' }}>Voting Process</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -53,25 +63,26 @@ export default function Guide() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     key={step.id} 
-                    onClick={() => setActiveStep(index)}
+                    onClick={() => handleStepSelect(index)}
+                    className="step-nav-item"
                     style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '0.75rem', 
-                      cursor: 'pointer',
-                      padding: '0.65rem 0.75rem',
-                      borderRadius: 'var(--radius-md)',
                       background: isActive ? 'rgba(249, 115, 22, 0.08)' : 'transparent',
                       border: isActive ? '1.5px solid var(--saffron)' : '1.5px solid transparent',
-                      transition: 'all 0.2s'
                     }}
+                    role="button"
+                    aria-current={isActive ? 'step' : undefined}
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStepSelect(index); }}
+                    aria-label={`Step ${step.id}: ${step.title}`}
                   >
                     {isCompleted ? (
-                      <CheckCircle2 size={20} color="var(--green)" />
+                      <CheckCircle2 size={20} color="var(--green)" aria-hidden="true" />
                     ) : isActive ? (
-                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--saffron)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.65rem', fontWeight: 800 }}>{step.id}</div>
+                      <div className="step-number-circle" style={{ background: 'var(--saffron)' }} aria-hidden="true">
+                        {step.id}
+                      </div>
                     ) : (
-                      <Circle size={20} color="#CBD5E1" />
+                      <Circle size={20} color="#CBD5E1" aria-hidden="true" />
                     )}
                     <span style={{ 
                       fontWeight: isActive ? 600 : 400, 
@@ -85,14 +96,13 @@ export default function Guide() {
               })}
             </div>
           </div>
-        </div>
+        </nav>
 
         {/* Step Details */}
-        <div style={{ flex: '2 1 500px' }}>
-          <div className="glass-card" style={{ padding: '2.5rem 2rem', minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}>
-            
+        <section className="step-details-container" aria-live="polite">
+          <div className="glass-card step-card">
             <AnimatePresence mode="wait">
-              <motion.div
+              <motion.article
                 key={activeStep}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -121,10 +131,10 @@ export default function Guide() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    style={{ background: 'var(--bg-color)', borderRadius: 'var(--radius-md)', padding: '1.5rem', marginBottom: '1.5rem', borderLeft: '4px solid var(--green)' }}
+                    className="tip-box"
                   >
                     <h4 style={{ fontSize: '0.9rem', color: 'var(--green)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      <Lightbulb size={16} /> Did You Know?
+                      <Lightbulb size={16} aria-hidden="true" /> Did You Know?
                     </h4>
                     <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                       {currentStep.tips.map((tip, idx) => (
@@ -135,7 +145,7 @@ export default function Guide() {
                           transition={{ delay: 0.3 + idx * 0.1 }}
                           style={{ display: 'flex', gap: '0.6rem', fontSize: '0.92rem', color: 'var(--text-muted)', lineHeight: 1.5 }}
                         >
-                          <span style={{ color: 'var(--green)', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          <span style={{ color: 'var(--green)', fontWeight: 700, flexShrink: 0 }} aria-hidden="true">✓</span>
                           {tip}
                         </motion.li>
                       ))}
@@ -143,33 +153,34 @@ export default function Guide() {
                   </motion.div>
                 )}
 
-                {/* Image */}
+                {/* Image Illustration */}
                 {getStepImage(currentStep.id) && (
                   <motion.div 
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    style={{ textAlign: 'center', margin: '1rem 0', background: 'linear-gradient(135deg, rgba(253,230,138,0.15) 0%, rgba(167,243,208,0.15) 100%)', padding: '1.5rem', borderRadius: 'var(--radius-lg)' }}
+                    className="illustration-box"
                   >
                     <img 
                       src={getStepImage(currentStep.id)} 
-                      alt="Step Illustration" 
+                      alt={`Illustration for ${currentStep.title}`} 
                       style={{ maxWidth: '100%', maxHeight: '160px', filter: 'drop-shadow(0 8px 12px rgba(0,0,0,0.06))' }} 
                     />
                   </motion.div>
                 )}
-              </motion.div>
+              </motion.article>
             </AnimatePresence>
 
-            {/* Navigation */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-solid)' }}>
+            {/* Navigation Buttons */}
+            <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-solid)' }} aria-label="Step navigation">
               <button 
                 className="btn btn-secondary" 
                 disabled={activeStep === 0}
                 onClick={() => setActiveStep(prev => Math.max(0, prev - 1))}
-                style={{ opacity: activeStep === 0 ? 0.4 : 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                style={{ opacity: activeStep === 0 ? 0.4 : 1 }}
+                aria-label="Previous step"
               >
-                <ArrowLeft size={16} /> Previous
+                <ArrowLeft size={16} aria-hidden="true" /> Previous
               </button>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
                 {Math.round(progress)}% Complete
@@ -178,14 +189,16 @@ export default function Guide() {
                 className="btn btn-primary" 
                 disabled={activeStep === voterGuideSteps.length - 1}
                 onClick={() => setActiveStep(prev => Math.min(voterGuideSteps.length - 1, prev + 1))}
-                style={{ opacity: activeStep === voterGuideSteps.length - 1 ? 0.4 : 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                style={{ opacity: activeStep === voterGuideSteps.length - 1 ? 0.4 : 1 }}
+                aria-label={activeStep === voterGuideSteps.length - 1 ? "Guide completed" : "Next step"}
               >
-                {activeStep === voterGuideSteps.length - 1 ? '✅ Done' : <>Next <ArrowRight size={16} /></>}
+                {activeStep === voterGuideSteps.length - 1 ? '✅ Done' : <>Next <ArrowRight size={16} aria-hidden="true" /></>}
               </button>
-            </div>
+            </nav>
           </div>
-        </div>
+        </section>
       </div>
     </motion.div>
   );
 }
+

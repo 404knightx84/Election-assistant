@@ -1,0 +1,87 @@
+.guide-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.progress-container {
+  max-width: 400px;
+  margin: 1.5rem auto 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-bar-bg {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-solid);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--saffron) 0%, var(--green) 100%);
+}
+
+.guide-layout {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stepper-nav {
+  flex: 1 1 280px;
+}
+
+.step-details-container {
+  flex: 2 1 500px;
+}
+
+.step-card {
+  padding: 2.5rem 2rem;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.step-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+}
+
+.step-number-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  fontSize: 0.65rem;
+  font-weight: 800;
+}
+
+.tip-box {
+  background: var(--bg-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--green);
+}
+
+.illustration-box {
+  text-align: center;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, rgba(253, 230, 138, 0.15) 0%, rgba(167, 243, 208, 0.15) 100%);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+}
