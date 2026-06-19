@@ -12,3 +12,6 @@ Polling Booth Locator – Guidance on finding your assigned booth and constituen
 Voting Process Walkthrough – Step-by-step explanation of what happens inside a polling station, including EVM and VVPAT usage
 Important Dates & Deadlines – Reminders for registration cutoffs and election dates
 FAQs – Common doubts (e.g., NOTA option, voting if not in hometown, postal ballots, PwD/senior citizen facilities)
+
+
+  
